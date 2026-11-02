@@ -1,0 +1,657 @@
+<title>Jazzmin Andres Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: a breadboard page. Sections are labelled like parts on a board,
+   projects are IC chips with pins, and the hero has a byte of LEDs you can click. */
+:root {
+  --bg: #EDF3EE;
+  --bg-dot: #C6D6CB;
+  --fg: #10231B;
+  --muted: #47604F;
+  --card: #FFFFFF;
+  --line: #C3D4C8;
+  --edge: #10231B;
+  --accent: #CB1B57;
+  --accent-ink: #FFFFFF;
+  --pcb: #14694A;
+  --solder: #F2B632;
+  --solder-ink: #2B1F00;
+  --blue: #2F6FE0;
+  --chip: #14262A;
+  --chip-edge: #0B1A1D;
+  --chip-fg: #E8F3EC;
+  --chip-muted: #9DB5AA;
+  --pin: #AEB9B3;
+  --ph-bg: rgba(242, 182, 50, 0.28);
+  --font-display: "Unbounded", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C1713;
+    --bg-dot: #1B2C25;
+    --fg: #E7F2EB;
+    --muted: #9DB3A6;
+    --card: #13241E;
+    --line: #26392F;
+    --edge: #3F6A58;
+    --accent: #FF5C8F;
+    --accent-ink: #1A0A10;
+    --pcb: #4ED8A1;
+    --solder: #FFC94A;
+    --solder-ink: #2B1F00;
+    --blue: #6FA3FF;
+    --chip: #0A1210;
+    --chip-edge: #2D463B;
+    --chip-fg: #E8F3EC;
+    --chip-muted: #93AB9F;
+    --pin: #7F8C85;
+    --ph-bg: rgba(255, 201, 74, 0.2);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C1713;
+  --bg-dot: #1B2C25;
+  --fg: #E7F2EB;
+  --muted: #9DB3A6;
+  --card: #13241E;
+  --line: #26392F;
+  --edge: #3F6A58;
+  --accent: #FF5C8F;
+  --accent-ink: #1A0A10;
+  --pcb: #4ED8A1;
+  --solder: #FFC94A;
+  --solder-ink: #2B1F00;
+  --blue: #6FA3FF;
+  --chip: #0A1210;
+  --chip-edge: #2D463B;
+  --chip-fg: #E8F3EC;
+  --chip-muted: #93AB9F;
+  --pin: #7F8C85;
+  --ph-bg: rgba(255, 201, 74, 0.2);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--bg-dot) 1.4px, transparent 1.6px);
+  background-size: 22px 22px;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  padding-block: 0 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+  z-index: 10;
+}
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin-inline: auto; }
+
+/* placeholders: easy to spot, easy to replace */
+.ph {
+  background: var(--ph-bg);
+  border-bottom: 2px dashed var(--solder);
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+/* header */
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 9;
+  background: var(--bg);
+  border-bottom: 2px solid var(--edge);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+}
+.top .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-right: auto; }
+.brand b {
+  display: grid; place-items: center; width: 38px; height: 38px;
+  background: var(--chip); color: var(--solder); border: 2px solid var(--chip-edge);
+  border-radius: 6px; font-size: 14px; letter-spacing: 0.02em;
+}
+.links { display: flex; gap: 4px; order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
+.links::-webkit-scrollbar { display: none; }
+.links a {
+  font-family: var(--font-mono); font-size: 13px; text-decoration: none; white-space: nowrap;
+  padding: 6px 10px; border-radius: 6px; color: var(--muted);
+}
+.links a:hover { background: var(--card); color: var(--fg); }
+@media (min-width: 760px) { .links { order: 0; width: auto; } }
+.power {
+  display: flex; align-items: center; gap: 8px; background: none; border: 0; cursor: pointer;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding: 4px;
+}
+.power .track { width: 40px; height: 22px; border: 2px solid var(--edge); border-radius: 99px; background: var(--card); position: relative; }
+.power .knob { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--fg); transition: transform .2s; }
+.power.on .knob { transform: translateX(18px); background: var(--solder); }
+
+/* hero */
+.hero { display: grid; gap: 40px; padding-block: clamp(36px, 7vw, 84px) clamp(40px, 7vw, 80px); align-items: center; }
+@media (min-width: 900px) { .hero { grid-template-columns: 1.25fr 1fr; } }
+.status {
+  display: inline-flex; align-items: center; gap: 10px; background: var(--card);
+  border: 2px solid var(--edge); border-radius: 99px; padding: 5px 14px 5px 10px;
+  font-family: var(--font-mono); font-size: 13px; margin-bottom: 22px; max-width: 100%;
+}
+.led { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); flex: none; animation: blink 1.6s steps(2, jump-none) infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+.hero h1 { font-size: clamp(2.3rem, 8.4vw, 5rem); font-weight: 700; letter-spacing: -0.02em; }
+.hero h1 span { color: var(--accent); display: block; }
+.role { font-family: var(--font-mono); font-size: 14px; color: var(--pcb); margin-top: 20px; font-weight: 500; }
+.lede { font-size: clamp(1.05rem, 2.2vw, 1.25rem); max-width: 34em; margin-top: 12px; }
+.cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer;
+  font-family: var(--font-body); font-weight: 600; font-size: 16px; color: var(--fg);
+  background: var(--card); border: 2px solid var(--edge); border-radius: 10px; padding: 11px 20px;
+  box-shadow: 4px 4px 0 var(--edge); transition: transform .12s, box-shadow .12s;
+}
+.btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--edge); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+
+/* byte widget */
+.byte {
+  background: var(--card); border: 2px solid var(--edge); border-radius: 18px;
+  box-shadow: 8px 8px 0 var(--edge); padding: 22px; min-width: 0;
+}
+.byte .cap { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; }
+.glyph {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(4.5rem, 14vw, 7rem); line-height: 1;
+  text-align: center; margin: 14px 0 10px; color: var(--accent); min-height: 1.1em;
+}
+.bits { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+.bit { display: grid; gap: 6px; justify-items: center; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.bit button {
+  width: 100%; max-width: 40px; aspect-ratio: 1; border-radius: 50%; cursor: pointer;
+  border: 2px solid var(--edge); background: var(--bg); transition: background .12s, box-shadow .12s;
+}
+.bit button[aria-pressed="true"] { background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+.readout { font-family: var(--font-mono); font-size: 13px; text-align: center; margin-top: 16px; color: var(--fg); font-variant-numeric: tabular-nums; }
+.byte .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.byte .row p { font-size: 14px; color: var(--muted); flex: 1 1 160px; min-width: 0; }
+.btn.small { padding: 7px 14px; font-size: 14px; box-shadow: 3px 3px 0 var(--edge); }
+
+/* sections */
+section { padding-block: clamp(40px, 7vw, 84px); border-top: 2px dashed var(--line); }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--pcb); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+h2 { font-size: clamp(1.7rem, 4.4vw, 2.6rem); font-weight: 700; letter-spacing: -0.01em; }
+.sec-head { margin-bottom: 36px; max-width: 40em; }
+.sec-head p { margin-top: 12px; color: var(--muted); }
+
+/* about */
+.about { display: grid; gap: 36px; }
+@media (min-width: 900px) { .about { grid-template-columns: 1.1fr 1fr; align-items: start; } }
+.about .copy { display: grid; gap: 16px; min-width: 0; }
+.sheet { background: var(--card); border: 2px solid var(--edge); border-radius: 14px; box-shadow: 6px 6px 0 var(--edge); overflow: hidden; min-width: 0; }
+.sheet header { background: var(--chip); color: var(--chip-fg); font-family: var(--font-mono); font-size: 13px; padding: 10px 16px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.sheet header b { color: var(--solder); font-weight: 500; }
+.sheet dl { margin: 0; }
+.sheet .r { display: grid; grid-template-columns: minmax(110px, 0.8fr) 1.4fr; gap: 12px; padding: 11px 16px; border-top: 1px solid var(--line); font-size: 15px; }
+.sheet .r:first-child { border-top: 0; }
+.sheet dt { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding-top: 3px; }
+.sheet dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+
+/* skills */
+.skills { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); }
+.bin { background: var(--card); border: 2px solid var(--edge); border-radius: 14px; padding: 20px; min-width: 0; }
+.bin h3 { font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.bin h3 i { width: 12px; height: 12px; border-radius: 3px; background: var(--c); flex: none; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pills li { font-family: var(--font-mono); font-size: 13px; border: 1.5px solid var(--line); border-radius: 99px; padding: 4px 12px; background: var(--bg); transition: border-color .15s, transform .15s; }
+.pills li:hover { border-color: var(--c); transform: translateY(-2px); }
+
+/* projects */
+.filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 34px; }
+.filters button {
+  font-family: var(--font-mono); font-size: 13px; cursor: pointer; color: var(--fg);
+  background: var(--card); border: 2px solid var(--edge); border-radius: 99px; padding: 6px 16px;
+}
+.filters button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.grid { display: grid; gap: 34px 30px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); padding-inline: 12px; }
+.chip {
+  position: relative; background: var(--chip); color: var(--chip-fg); border: 2px solid var(--chip-edge);
+  border-radius: 10px; padding: 30px 20px 22px; display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  transition: transform .2s;
+}
+.chip::before, .chip::after {
+  content: ""; position: absolute; top: 34px; bottom: 34px; width: 11px;
+  background: repeating-linear-gradient(to bottom, var(--pin) 0 9px, transparent 9px 21px);
+  transition: background .2s;
+}
+.chip::before { left: -13px; border-radius: 3px 0 0 3px; }
+.chip::after { right: -13px; border-radius: 0 3px 3px 0; }
+.chip:hover { transform: translateY(-5px); }
+.chip:hover::before, .chip:hover::after { background: repeating-linear-gradient(to bottom, var(--solder) 0 9px, transparent 9px 21px); }
+.notch { position: absolute; top: -2px; left: 50%; width: 26px; height: 13px; margin-left: -13px; background: var(--bg); border: 2px solid var(--chip-edge); border-top: 0; border-radius: 0 0 13px 13px; }
+.shot {
+  aspect-ratio: 16 / 9; border-radius: 6px; display: grid; place-items: center; text-align: center; padding: 8px;
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--c) 30%, var(--chip)) 0 12px, var(--chip) 12px 24px);
+  border: 1.5px dashed var(--c); color: var(--chip-fg); font-family: var(--font-mono); font-size: 12px;
+}
+.pn { font-family: var(--font-mono); font-size: 12px; color: var(--solder); letter-spacing: 0.04em; }
+.chip h3 { font-size: 1.3rem; font-weight: 700; color: var(--chip-fg); }
+.chip p { font-size: 15px; color: var(--chip-muted); }
+.chip .ph { background: rgba(255, 201, 74, 0.16); color: var(--chip-fg); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tags li { font-family: var(--font-mono); font-size: 11.5px; border: 1px solid var(--chip-muted); color: var(--chip-fg); border-radius: 4px; padding: 1px 8px; }
+.plinks { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: auto; padding-top: 6px; font-family: var(--font-mono); font-size: 13px; }
+.plinks a { color: var(--solder); text-decoration: none; border-bottom: 1.5px solid transparent; }
+.plinks a:hover { border-color: var(--solder); }
+.chip[hidden] { display: none; }
+
+/* journey */
+.journey { display: grid; gap: 48px; }
+@media (min-width: 960px) { .journey { grid-template-columns: 1fr 1fr; align-items: start; gap: 64px; } }
+.journey h3.sub { font-size: 1.05rem; font-weight: 500; font-family: var(--font-mono); color: var(--muted); margin-bottom: 22px; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 28px; position: relative; display: grid; gap: 26px; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 3px; background: var(--edge); border-radius: 2px; }
+.timeline li { position: relative; min-width: 0; }
+.timeline li::before { content: ""; position: absolute; left: -28px; top: 6px; width: 17px; height: 17px; border-radius: 50%; background: var(--c); border: 3px solid var(--bg); box-shadow: 0 0 0 2px var(--edge); }
+.timeline .when { font-family: var(--font-mono); font-size: 13px; color: var(--pcb); }
+.timeline h3 { font-size: 1.05rem; font-weight: 500; margin: 4px 0; }
+.timeline p { color: var(--muted); font-size: 15px; }
+.badges { display: grid; gap: 14px; }
+.badge { display: flex; align-items: center; gap: 16px; background: var(--card); border: 2px solid var(--edge); border-radius: 12px; padding: 12px 16px; min-width: 0; }
+.badge .medal {
+  flex: none; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--c); color: #1A1200; border: 2px solid var(--edge);
+  font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: -0.02em;
+}
+.badge b { display: block; font-weight: 600; font-size: 16px; line-height: 1.3; }
+.badge span.d { display: block; color: var(--muted); font-size: 14px; line-height: 1.4; margin-top: 2px; }
+.badge div { min-width: 0; }
+
+/* contact */
+.contact { background: var(--solder); color: var(--solder-ink); border: 2px solid var(--edge); border-radius: 22px; box-shadow: 8px 8px 0 var(--edge); padding: clamp(24px, 5vw, 52px); display: grid; gap: 28px; }
+@media (min-width: 860px) { .contact { grid-template-columns: 1.1fr 1fr; align-items: center; } }
+.contact h2 { font-size: clamp(1.9rem, 5.4vw, 3.2rem); color: var(--solder-ink); }
+.contact p { margin-top: 14px; max-width: 28em; }
+.reach { display: grid; gap: 12px; min-width: 0; }
+.reach .item { display: flex; align-items: center; gap: 12px; background: #FFFDF5; color: #1B1500; border: 2px solid #2B1F00; border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.reach .item .k { font-family: var(--font-mono); font-size: 11px; opacity: .7; width: 64px; flex: none; }
+.reach .item .v { flex: 1; min-width: 0; font-size: 15px; overflow-wrap: anywhere; }
+.reach .item a { text-decoration: none; border-bottom: 1.5px solid #2B1F00; }
+.reach .copy-btn { flex: none; font-family: var(--font-mono); font-size: 12px; background: #2B1F00; color: #FFE9A8; border: 0; border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.reach .ph { background: rgba(242, 182, 50, 0.45); border-bottom-color: #B07D00; }
+
+footer { padding-top: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .led { animation: none; }
+  .chip, .btn, .pills li, .power .knob { transition: none; }
+}
+</style>
+
+<div class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Jazzmin Andres, back to top"><b>JA</b><span>Jazzmin Andres</span></a>
+    <nav class="links" aria-label="Sections">
+      <a href="#about">about</a>
+      <a href="#skills">toolbox</a>
+      <a href="#projects">projects</a>
+      <a href="#journey">journey</a>
+      <a href="#contact">contact</a>
+    </nav>
+    <button class="power" id="power" type="button" aria-label="Switch between light and dark theme">
+      <span class="track"><span class="knob"></span></span><span id="powerLabel">light</span>
+    </button>
+  </div>
+</div>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <div class="status"><span class="led" aria-hidden="true"></span><span>BSCpE · De La Salle University–Dasmariñas · Class of 2027</span></div>
+      <h1>Jazzmin <span>Andres</span></h1>
+      <p class="role">// senior computer engineering student</p>
+      <p class="lede">I teach small computers to do useful things. I build across embedded systems, IoT, web development and networking, and I like leading the team that gets it done.</p>
+      <div class="cta">
+        <a class="btn primary" href="#projects">See my work</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="byte" aria-label="Interactive byte display">
+      <div class="cap"><span>byte.exe</span><span id="idxLabel">letter 1 of 7</span></div>
+      <div class="glyph" id="glyph" aria-live="polite">J</div>
+      <div class="bits" id="bits"></div>
+      <div class="readout" id="readout"></div>
+      <div class="row">
+        <p>Click the LEDs. Each one is a bit, and together they spell my name.</p>
+        <button class="btn small" id="nextLetter" type="button">Next letter</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="about">
+      <div class="copy">
+        <div>
+          <div class="eyebrow">U1 · About me</div>
+          <h2>Where code meets circuits.</h2>
+        </div>
+        <p>I'm Jazzmin Roice Ann C. Andres, a Computer Engineering student with hands-on experience in embedded systems, IoT, web development and networking. Through class and competition projects I've built skills in programming, hardware integration and database management.</p>
+        <p>I enjoy leading project teams and working with student organizations, and I'm driven by building practical engineering solutions that people can actually use. <span class="ph">[Add a sentence or two about what got you into engineering.]</span></p>
+      </div>
+      <div class="sheet">
+        <header><span>JAZZMIN-ANDRES / datasheet</span><b>rev. 2026</b></header>
+        <dl>
+          <div class="r"><dt>Program</dt><dd>BS Computer Engineering</dd></div>
+          <div class="r"><dt>School</dt><dd>De La Salle University–Dasmariñas</dd></div>
+          <div class="r"><dt>Studying</dt><dd>2023 to present</dd></div>
+          <div class="r"><dt>Graduation</dt><dd>2027 (expected)</dd></div>
+          <div class="r"><dt>Senior high</dt><dd>Rogationist College, STEM (2021 to 2023)</dd></div>
+          <div class="r"><dt>Roles</dt><dd>Academic project team leader, class vice president</dd></div>
+          <div class="r"><dt>Based in</dt><dd>Tagaytay City, Cavite, Philippines</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head">
+      <div class="eyebrow">U2 · Toolbox</div>
+      <h2>What I work with</h2>
+      <p>Languages, tools and hardware I use to build things.</p>
+    </div>
+    <div class="skills">
+      <div class="bin" style="--c: var(--blue)">
+        <h3><i></i>Programming languages</h3>
+        <ul class="pills">
+          <li>C</li><li>C++</li><li>Python</li><li>Java</li><li>PHP</li><li>JavaScript</li><li>HTML</li><li>SQL</li>
+        </ul>
+      </div>
+      <div class="bin" style="--c: var(--accent)">
+        <h3><i></i>Hardware and embedded</h3>
+        <ul class="pills">
+          <li>PIC microcontrollers</li><li>ESP32</li><li>Altera MAX II</li><li>PCB design</li>
+        </ul>
+      </div>
+      <div class="bin" style="--c: var(--pcb)">
+        <h3><i></i>Development tools</h3>
+        <ul class="pills">
+          <li>VS Code</li><li>MPLAB X IDE</li><li>XAMPP</li><li>MySQL</li><li>AutoCAD</li><li>3D CAD modeling</li>
+        </ul>
+      </div>
+      <div class="bin" style="--c: var(--solder)">
+        <h3><i></i>Networking</h3>
+        <ul class="pills">
+          <li>Network configuration</li><li>Troubleshooting</li><li>Cisco ITN</li>
+        </ul>
+      </div>
+      <div class="bin" style="--c: var(--accent)">
+        <h3><i></i>People skills</h3>
+        <ul class="pills">
+          <li>Problem-solving</li><li>Communication</li><li>Adaptability</li><li>Teamwork</li><li>Leadership</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head">
+      <div class="eyebrow">U3 · Projects</div>
+      <h2>Things I've built</h2>
+      <p>From a glucose monitor to a line-following robot. Each chip is one project.</p>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter projects">
+      <button type="button" data-f="all" aria-pressed="true">all</button>
+      <button type="button" data-f="embedded" aria-pressed="false">embedded and IoT</button>
+      <button type="button" data-f="web" aria-pressed="false">web</button>
+      <button type="button" data-f="circuits" aria-pressed="false">digital circuits</button>
+    </div>
+
+    <div class="grid" id="grid">
+      <article class="chip" data-cat="embedded web" style="--c: #FF5C8F">
+        <span class="notch"></span>
+        <div class="shot">Add a photo or screenshot</div>
+        <div class="pn">JA-001 · IOT + WEB</div>
+        <h3>SugAware</h3>
+        <p>An IoT-based blood glucose monitoring web application. <span class="ph">[Add what your part was and how it performed.]</span></p>
+        <ul class="tags"><li>PHP</li><li>MySQL</li><li>ESP32</li></ul>
+        <div class="plinks"><a href="https://github.com/jazzminandres">code ↗</a><span class="ph">[demo link]</span></div>
+      </article>
+
+      <article class="chip" data-cat="web" style="--c: #6FA3FF">
+        <span class="notch"></span>
+        <div class="shot">Add a photo or screenshot</div>
+        <div class="pn">JA-002 · WEB APP</div>
+        <h3>AniMeals</h3>
+        <p>A community-driven food ordering and delivery web application for De La Salle University–Dasmariñas. <span class="ph">[Add your role and features.]</span></p>
+        <ul class="tags"><li>Web app</li><li>Food delivery</li><li>DLSU-D</li></ul>
+        <div class="plinks"><a href="https://github.com/jazzminandres">code ↗</a><span class="ph">[demo link]</span></div>
+      </article>
+
+      <article class="chip" data-cat="embedded" style="--c: #FFC94A">
+        <span class="notch"></span>
+        <div class="shot">Add a photo or screenshot</div>
+        <div class="pn">JA-003 · EMBEDDED</div>
+        <h3>Line Following Robot</h3>
+        <p>An autonomous robot designed around a PIC microcontroller. <span class="ph">[Add how it senses the line and how it did on the track.]</span></p>
+        <ul class="tags"><li>PIC microcontroller</li><li>Autonomous robot</li></ul>
+        <div class="plinks"><a href="https://github.com/jazzminandres">code ↗</a><span class="ph">[video link]</span></div>
+      </article>
+
+      <article class="chip" data-cat="circuits" style="--c: #4ED8A1">
+        <span class="notch"></span>
+        <div class="shot">Add a photo or screenshot</div>
+        <div class="pn">JA-004 · DIGITAL DESIGN</div>
+        <h3>Traffic Light Controller</h3>
+        <p>A traffic light control system built on an Altera MAX II CPLD. <span class="ph">[Add the timing logic and the results.]</span></p>
+        <ul class="tags"><li>Altera MAX II</li><li>CPLD</li><li>Digital design</li></ul>
+        <div class="plinks"><a href="https://github.com/jazzminandres">code ↗</a><span class="ph">[report link]</span></div>
+      </article>
+
+      <article class="chip" data-cat="circuits" style="--c: #FF5C8F">
+        <span class="notch"></span>
+        <div class="shot">Add a photo or screenshot</div>
+        <div class="pn">JA-005 · CIRCUITS</div>
+        <h3>Flood Alarm System</h3>
+        <p>An IC-based flood detection and alarm system. <span class="ph">[Add how it detects water and what it triggers.]</span></p>
+        <ul class="tags"><li>IC-based</li><li>Flood detection</li><li>Alarm</li></ul>
+        <div class="plinks"><a href="https://github.com/jazzminandres">code ↗</a><span class="ph">[video link]</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="journey">
+    <div class="sec-head">
+      <div class="eyebrow">U4 · Journey</div>
+      <h2>School, leadership, and wins</h2>
+    </div>
+    <div class="journey">
+      <div>
+        <h3 class="sub">// timeline</h3>
+        <ol class="timeline">
+          <li style="--c: var(--solder)">
+            <div class="when">2021 to 2023</div>
+            <h3>Rogationist College</h3>
+            <p>Science, Technology, Engineering and Mathematics (STEM). Honor student from Grade 10 to 12.</p>
+          </li>
+          <li style="--c: var(--accent)">
+            <div class="when">2023 to present</div>
+            <h3>De La Salle University–Dasmariñas</h3>
+            <p>Bachelor of Science in Computer Engineering. Expected graduation in 2027.</p>
+          </li>
+          <li style="--c: var(--blue)">
+            <div class="when">2023 to present</div>
+            <h3>Academic Project Team Leader</h3>
+            <p>Leads academic project teams from planning and task delegation through to completion and presentation.</p>
+          </li>
+          <li style="--c: var(--pcb)">
+            <div class="when">2023 to present</div>
+            <h3>Class Vice President, BS Computer Engineering</h3>
+            <p>Represents the class and coordinates with faculty and student officers.</p>
+          </li>
+          <li style="--c: var(--solder)">
+            <div class="when">2024 to present</div>
+            <h3>Creatives Committee Member</h3>
+            <p>Computer Engineering Student Organization. Designs promotional materials and supports departmental events and initiatives.</p>
+          </li>
+        </ol>
+      </div>
+      <div>
+        <h3 class="sub">// awards and certifications</h3>
+        <div class="badges">
+          <div class="badge" style="--c: var(--solder)"><span class="medal">1ST</span><div><b>Champion</b><span class="d">Database Race Competition</span></div></div>
+          <div class="badge" style="--c: #FF8FB3"><span class="medal">TOP 5</span><div><b>Best Capstone Project</b><span class="d">Grade 12, Rogationist College</span></div></div>
+          <div class="badge" style="--c: #8FE3BE"><span class="medal">HON</span><div><b>Honor Student</b><span class="d">Grades 10 to 12, Rogationist College</span></div></div>
+          <div class="badge" style="--c: #9DBFFF"><span class="medal">ITN</span><div><b>Cisco Networking Academy</b><span class="d">Introduction to Networks</span></div></div>
+          <div class="badge" style="--c: var(--solder)"><span class="medal">CPE</span><div><b>Microchip University</b><span class="d">Embedded Systems and PIC Programming</span></div></div>
+          <div class="badge" style="--c: #FF8FB3"><span class="medal">CPR</span><div><b>First Aid, CPR and DRRM</b><span class="d">Basic preparedness training</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact">
+      <div>
+        <h2>Let's build something together.</h2>
+        <p>Open to projects, collaborations and opportunities in embedded systems, IoT and web development. Send me a message and I'll reply as soon as I can.</p>
+      </div>
+      <div class="reach">
+        <div class="item"><span class="k">email</span><span class="v" id="emailText">jazzminandres@gmail.com</span><button class="copy-btn" type="button" data-copy="emailText">copy</button></div>
+        <div class="item"><span class="k">github</span><span class="v"><a href="https://github.com/jazzminandres">github.com/jazzminandres</a></span></div>
+        <div class="item"><span class="k">linkedin</span><span class="v"><a href="https://www.linkedin.com/in/jazzminandres">linkedin.com/in/jazzminandres</a></span></div>
+        <div class="item"><span class="k">based in</span><span class="v">Tagaytay City, Cavite</span></div>
+        <div class="item"><span class="k">résumé</span><span class="v"><a href="https://example.com/your-resume"><span class="ph">[link to your résumé]</span></a></span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Jazzmin Andres</span>
+    <span>Running on 3.3V and good snacks.</span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* theme switch */
+  var power = document.getElementById('power');
+  var powerLabel = document.getElementById('powerLabel');
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function paintPower() {
+    var d = isDark();
+    power.classList.toggle('on', d);
+    powerLabel.textContent = d ? 'dark' : 'light';
+  }
+  power.addEventListener('click', function () {
+    root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+    paintPower();
+  });
+  paintPower();
+
+  /* byte display */
+  var word = 'JAZZMIN';
+  var idx = 0;
+  var code = word.charCodeAt(0);
+  var bitsEl = document.getElementById('bits');
+  var glyph = document.getElementById('glyph');
+  var readout = document.getElementById('readout');
+  var idxLabel = document.getElementById('idxLabel');
+  var buttons = [];
+
+  for (var i = 7; i >= 0; i--) {
+    (function (b) {
+      var wrap = document.createElement('div');
+      wrap.className = 'bit';
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Bit worth ' + (1 << b));
+      btn.addEventListener('click', function () {
+        code = code ^ (1 << b);
+        render();
+      });
+      var lab = document.createElement('span');
+      lab.textContent = String(1 << b);
+      wrap.appendChild(btn);
+      wrap.appendChild(lab);
+      bitsEl.appendChild(wrap);
+      buttons.push({ btn: btn, b: b });
+    })(i);
+  }
+
+  function hex2(n) { var h = n.toString(16).toUpperCase(); return h.length < 2 ? '0' + h : h; }
+  function render() {
+    buttons.forEach(function (o) {
+      o.btn.setAttribute('aria-pressed', (code >> o.b) & 1 ? 'true' : 'false');
+    });
+    var printable = code >= 33 && code <= 126;
+    glyph.textContent = printable ? String.fromCharCode(code) : (code === 32 ? '␣' : '·');
+    var bin = code.toString(2);
+    while (bin.length < 8) bin = '0' + bin;
+    readout.textContent = bin + '  |  dec ' + code + '  |  hex 0x' + hex2(code);
+    idxLabel.textContent = 'letter ' + (idx + 1) + ' of ' + word.length;
+  }
+  document.getElementById('nextLetter').addEventListener('click', function () {
+    idx = (idx + 1) % word.length;
+    code = word.charCodeAt(idx);
+    render();
+  });
+  render();
+
+  /* project filter */
+  var fbtns = document.querySelectorAll('.filters button');
+  var cards = document.querySelectorAll('#grid .chip');
+  fbtns.forEach(function (fb) {
+    fb.addEventListener('click', function () {
+      var f = fb.getAttribute('data-f');
+      fbtns.forEach(function (x) { x.setAttribute('aria-pressed', x === fb ? 'true' : 'false'); });
+      cards.forEach(function (c) {
+        var cats = ' ' + c.getAttribute('data-cat') + ' ';
+        c.hidden = !(f === 'all' || cats.indexOf(' ' + f + ' ') > -1);
+      });
+    });
+  });
+
+  /* copy buttons */
+  document.querySelectorAll('.copy-btn').forEach(function (cb) {
+    cb.addEventListener('click', function () {
+      var target = document.getElementById(cb.getAttribute('data-copy'));
+      var text = target.textContent;
+      function done() { cb.textContent = 'copied'; setTimeout(function () { cb.textContent = 'copy'; }, 1500); }
+      function select() {
+        var r = document.createRange();
+        r.selectNodeContents(target);
+        var s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+        cb.textContent = 'selected';
+        setTimeout(function () { cb.textContent = 'copy'; }, 1500);
+      }
+      try {
+        navigator.clipboard.writeText(text).then(done, select);
+      } catch (e) { select(); }
+    });
+  });
+})();
+</script>
