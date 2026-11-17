@@ -292,6 +292,13 @@ h2 { font-size: clamp(1.7rem, 4.4vw, 2.6rem); font-weight: 700; letter-spacing: 
 .reach .item a { text-decoration: none; border-bottom: 1.5px solid #2B1F00; }
 .reach .copy-btn { flex: none; font-family: var(--font-mono); font-size: 12px; background: #2B1F00; color: #FFE9A8; border: 0; border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .reach .ph { background: rgba(242, 182, 50, 0.45); border-bottom-color: #B07D00; }
+.msg { display: grid; gap: 6px; background: #FFFDF5; color: #1B1500; border: 2px solid #2B1F00; border-radius: 10px; padding: 14px; min-width: 0; }
+.msg label { font-family: var(--font-mono); font-size: 11px; opacity: .75; margin-top: 4px; }
+.msg input, .msg textarea { width: 100%; font: inherit; font-size: 15px; color: #1B1500; background: #FFFFFF; border: 2px solid #2B1F00; border-radius: 8px; padding: 8px 10px; resize: vertical; }
+.msg input:focus-visible, .msg textarea:focus-visible, .send:focus-visible { outline: 3px solid #CB1B57; outline-offset: 2px; }
+.send { margin-top: 8px; justify-self: start; font-family: var(--font-body); font-weight: 600; font-size: 15px; background: #2B1F00; color: #FFE9A8; border: 0; border-radius: 8px; padding: 9px 18px; cursor: pointer; }
+.status-msg { font-size: 14px; min-height: 1.3em; margin: 4px 0 0; }
+.status-msg.err { color: #A3123F; }
 
 footer { padding-top: 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
 
@@ -304,7 +311,7 @@ footer { padding-top: 40px; display: flex; flex-wrap: wrap; justify-content: spa
 
 <div class="top">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Jazzmin Andres, back to top"><b>JA</b><span>Jazzminnnnn</span></a>
+    <a class="brand" href="#top" aria-label="Jazzmin Andres, back to top"><b>JA</b><span>Jazzmin Andres</span></a>
     <nav class="links" aria-label="Sections">
       <a href="#about">about</a>
       <a href="#skills">toolbox</a>
@@ -532,11 +539,16 @@ footer { padding-top: 40px; display: flex; flex-wrap: wrap; justify-content: spa
         <p>Open to projects, collaborations and opportunities in embedded systems, IoT and web development. Send me a message and I'll reply as soon as I can.</p>
       </div>
       <div class="reach">
-        <div class="item"><span class="k">email</span><span class="v" id="emailText">jazzminandres@gmail.com</span><button class="copy-btn" type="button" data-copy="emailText">copy</button></div>
         <div class="item"><span class="k">github</span><span class="v"><a href="https://github.com/jazzminandres">github.com/jazzminandres</a></span></div>
         <div class="item"><span class="k">linkedin</span><span class="v"><a href="https://www.linkedin.com/in/jazzminandres">linkedin.com/in/jazzminandres</a></span></div>
-        <div class="item"><span class="k">based in</span><span class="v">Tagaytay City, Cavite</span></div>
-        <div class="item"><span class="k">résumé</span><span class="v"><a href="https://example.com/your-resume"><span class="ph">[link to your résumé]</span></a></span></div>
+        <form class="msg" id="msgForm" novalidate>
+          <label for="msgEmail">Your email</label>
+          <input id="msgEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+          <label for="msgText">Message</label>
+          <textarea id="msgText" name="message" rows="4" placeholder="Hi Jazzmin, I'd like to talk about..." required></textarea>
+          <button class="send" type="submit">Send message</button>
+          <p class="status-msg" id="msgStatus" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </div>
   </section>
@@ -652,6 +664,38 @@ footer { padding-top: 40px; display: flex; flex-wrap: wrap; justify-content: spa
         navigator.clipboard.writeText(text).then(done, select);
       } catch (e) { select(); }
     });
+  });
+
+  /* message form.
+     To deliver messages straight to your inbox, make a free form at formspree.io (or web3forms.com),
+     paste its URL below, and host this page on your own site. Until then, Send opens your email app. */
+  var FORM_ENDPOINT = '';            // e.g. 'https://formspree.io/f/xxxxxxxx'
+  var MY_EMAIL = 'jazzminandres@gmail.com';
+  var form = document.getElementById('msgForm');
+  var status = document.getElementById('msgStatus');
+  function say(t, err) { status.textContent = t; status.className = 'status-msg' + (err ? ' err' : ''); }
+  function viaMailApp(email, message) {
+    var body = message + '\n\nReply to: ' + email;
+    window.location.href = 'mailto:' + MY_EMAIL + '?subject=' + encodeURIComponent('Message from your portfolio') + '&body=' + encodeURIComponent(body);
+    say('Opening your email app. If nothing opens, email ' + MY_EMAIL + ' directly.');
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('msgEmail').value.trim();
+    var message = document.getElementById('msgText').value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { say('Enter a valid email so I can reply.', true); return; }
+    if (!message) { say('Write a short message first.', true); return; }
+    if (!FORM_ENDPOINT) { viaMailApp(email, message); return; }
+    say('Sending...');
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email: email, message: message })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('bad status');
+      form.reset();
+      say('Sent. Thank you, I will reply soon.');
+    }).catch(function () { viaMailApp(email, message); });
   });
 })();
 </script>
